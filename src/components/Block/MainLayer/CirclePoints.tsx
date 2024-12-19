@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import styled, { keyframes, css } from 'styled-components';
+import styled from 'styled-components';
 import { gsap } from 'gsap';
 
 const RotatingCircle = styled.div`
@@ -45,9 +45,16 @@ const calculateDotPositions = (count: number) => {
     return positions;
 };
 
-const CirclePoints: React.FC<{ total: number; current: number }> = ({
+interface CirclePointsProps {
+    total: number;
+    current: number;
+    setPeriod: (number: number) => void;
+}
+
+const CirclePoints: React.FC<CirclePointsProps> = ({
     total,
     current,
+    setPeriod,
 }) => {
     const [points, setPoints] = useState(calculateDotPositions(total));
 
@@ -58,7 +65,15 @@ const CirclePoints: React.FC<{ total: number; current: number }> = ({
 
     const rotateAll = (steps: number) => {
         const oneStepAngle = 360 / total;
-        const rotationAngle = steps * oneStepAngle;
+
+        const clockwiseSteps = steps;
+        const counterClockwiseSteps = total - steps;
+
+        const rotationAngle =
+            clockwiseSteps <= counterClockwiseSteps
+                ? clockwiseSteps * oneStepAngle
+                : -counterClockwiseSteps * oneStepAngle;
+
         currentRotation.current += rotationAngle;
 
         gsap.to(circleRef.current, {
@@ -76,21 +91,27 @@ const CirclePoints: React.FC<{ total: number; current: number }> = ({
         });
     };
 
-    const handleDotClick = (clickedIndex: number) => {
+    const handleDotUpdate = (newIndex: number) => {
         const newPoints = points.map((point, itemIndex) => {
             const steps =
-                (total - ((itemIndex - clickedIndex + total) % total)) % total;
+                (total - ((itemIndex - newIndex + total) % total)) % total;
             return { ...point, steps };
         });
 
         setPoints(newPoints);
 
-        rotateAll(points[clickedIndex].steps);
+        rotateAll(points[newIndex].steps);
+    };
+
+    const handleDotClick = (clickedIndex: number) => {
+        handleDotUpdate(clickedIndex);
+
+        setPeriod(points[clickedIndex].number);
     };
 
     useEffect(() => {
         if (current > 0 && current <= total) {
-            handleDotClick(current - 1);
+            handleDotUpdate(current - 1);
         }
     }, [current]);
 
@@ -107,6 +128,7 @@ const CirclePoints: React.FC<{ total: number; current: number }> = ({
                     onClick={() => handleDotClick(index)}
                 >
                     {point.number}
+                    {/* :: {point.steps} */}
                 </Dot>
             ))}
         </RotatingCircle>

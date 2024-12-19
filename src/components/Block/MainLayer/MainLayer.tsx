@@ -42,7 +42,7 @@ const MainLayer: React.FC = () => {
             <CirclePoints
                 current={activePeriodIndex + 1}
                 total={timePeriods.length}
-                // setPeriod={handleYearChange}
+                setPeriod={handleYearChange}
             />
             <Counter
                 current={activePeriodIndex + 1}
