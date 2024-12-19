@@ -1,27 +1,8 @@
-//     top: calc(50% - 187.5px); /* 265px * cos(45°) */
-//     left: calc(50% + 187.5px); /* 265px * sin(45°) */
-
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled, { keyframes, css } from 'styled-components';
+import { gsap } from 'gsap';
 
-const rotate = keyframes`
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-`;
-const rotateBack = keyframes`
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(-360deg);
-    }
-`;
-
-const RotatingCircle = styled.div<{ isRotating: boolean }>`
+const RotatingCircle = styled.div`
     position: absolute;
     top: 215px;
     left: calc(50% - 265px);
@@ -32,14 +13,9 @@ const RotatingCircle = styled.div<{ isRotating: boolean }>`
     display: flex;
     align-items: center;
     justify-content: center;
-    ${({ isRotating }) =>
-        isRotating &&
-        css`
-            animation: ${rotate} 5s linear infinite;
-        `}
 `;
 
-const Dot = styled.div<{ top: string; left: string; isRotating: boolean }>`
+const Dot = styled.div<{ top: string; left: string }>`
     position: absolute;
 
     top: calc(${({ top }) => top} - 25px);
@@ -53,11 +29,6 @@ const Dot = styled.div<{ top: string; left: string; isRotating: boolean }>`
     background-color: rgb(189, 189, 189);
     border-radius: 50%;
     cursor: pointer;
-    ${({ isRotating }) =>
-        isRotating &&
-        css`
-            animation: ${rotateBack} 5s linear infinite;
-        `}
 `;
 
 const calculateDotPositions = (count: number) => {
@@ -68,28 +39,72 @@ const calculateDotPositions = (count: number) => {
         const angle = (2 * Math.PI * i) / count - Math.PI / 2 + offsetAngle;
         const left = `calc(50% + ${Math.cos(angle) * 265}px)`;
         const top = `calc(50% + ${Math.sin(angle) * 265}px)`;
-        positions.push({ number: i + 1, top, left });
+        const steps = (count - i) % count;
+        positions.push({ number: i + 1, top, left, steps });
     }
     return positions;
 };
 
-const CirclePoints: React.FC<{ total: number }> = ({ total }) => {
-    const [isRotating, setIsRotating] = useState(false);
-    const points = calculateDotPositions(6);
+const CirclePoints: React.FC<{ total: number; current: number }> = ({
+    total,
+    current,
+}) => {
+    const [points, setPoints] = useState(calculateDotPositions(total));
 
-    const handleDotClick = () => {
-        setIsRotating(!isRotating);
+    const circleRef = useRef<HTMLDivElement>(null);
+    const dotRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+    const currentRotation = useRef(0);
+
+    const rotateAll = (steps: number) => {
+        const oneStepAngle = 360 / total;
+        const rotationAngle = steps * oneStepAngle;
+        currentRotation.current += rotationAngle;
+
+        gsap.to(circleRef.current, {
+            rotate: currentRotation.current,
+            duration: 1,
+        });
+
+        dotRefs.current.forEach((dot) => {
+            if (dot) {
+                gsap.to(dot, {
+                    rotate: -currentRotation.current,
+                    duration: 1,
+                });
+            }
+        });
     };
 
+    const handleDotClick = (clickedIndex: number) => {
+        const newPoints = points.map((point, itemIndex) => {
+            const steps =
+                (total - ((itemIndex - clickedIndex + total) % total)) % total;
+            return { ...point, steps };
+        });
+
+        setPoints(newPoints);
+
+        rotateAll(points[clickedIndex].steps);
+    };
+
+    useEffect(() => {
+        if (current > 0 && current <= total) {
+            handleDotClick(current - 1);
+        }
+    }, [current]);
+
     return (
-        <RotatingCircle isRotating={isRotating}>
-            {points.map((point) => (
+        <RotatingCircle ref={circleRef}>
+            {points.map((point, index) => (
                 <Dot
                     key={point.number}
+                    ref={(el: HTMLDivElement | null) => {
+                        dotRefs.current[index] = el;
+                    }}
                     top={point.top}
                     left={point.left}
-                    onClick={handleDotClick}
-                    isRotating={isRotating}
+                    onClick={() => handleDotClick(index)}
                 >
                     {point.number}
                 </Dot>

@@ -40,9 +40,8 @@ const MainLayer: React.FC = () => {
                 <h2 className="red">{activePeriod.endYear}</h2>
             </DatesDisplay>
             <CirclePoints
-                // current={activePeriodIndex + 1}
-                total={4}
-                // total={timePeriods.length}
+                current={activePeriodIndex + 1}
+                total={timePeriods.length}
                 // setPeriod={handleYearChange}
             />
             <Counter
