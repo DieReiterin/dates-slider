@@ -15,11 +15,11 @@ const CounterContainer = styled.div`
     width: 120px;
     height: 90px;
     margin: 0 0 55px;
-    border: 1px solid black;
+    padding-left: 75px;
 `;
 
 const Count = styled.div`
-    font-size: 14px;
+    font-size: 24px;
 `;
 
 const Buttons = styled.div`
@@ -29,16 +29,20 @@ const Buttons = styled.div`
     border: 1px solid red;
 `;
 
-const Button = styled.button`
+const Button = styled.button<{ enabled: boolean }>`
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 50px;
     height: 50px;
+    border: 1px solid #42567a;
+    opacity: ${({ enabled }) => (enabled ? '1' : '0.5')};
     border-radius: 50%;
-    font-size: 32px;
+    background: #fff;
     cursor: pointer;
-    border: 1px solid #ccc;
-    background-color: #f7f7f7;
-    &:hover {
-        background-color: #e0e0e0;
+    svg {
+        width: 10px;
+        height: 20px;
     }
 `;
 
@@ -59,8 +63,32 @@ const Counter: React.FC<ICounterProps> = ({ current, total, setPeriod }) => {
         <CounterContainer>
             <Count>{`0${current.toString()}/0${total}`}</Count>
             <Buttons>
-                <Button onClick={decrement}>-</Button>
-                <Button onClick={increment}>+</Button>
+                <Button enabled={current > 1} onClick={decrement}>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 8 12"
+                        fill="none"
+                    >
+                        <path
+                            d="M6 1L1 6L6 11"
+                            stroke="#42567a"
+                            strokeWidth="2"
+                        />
+                    </svg>
+                </Button>
+                <Button enabled={current < total} onClick={increment}>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 8 12"
+                        fill="none"
+                    >
+                        <path
+                            d="M1 1L6 6L1 11"
+                            stroke="#42567a"
+                            strokeWidth="2"
+                        />
+                    </svg>
+                </Button>
             </Buttons>
         </CounterContainer>
     );

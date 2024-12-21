@@ -8,9 +8,9 @@ const BlockContainer = styled.div`
     width: 1440px;
     height: 1080px;
     margin: 0 auto;
-    background-color: rgb(109, 109, 109);
+    background-color: #fff;
 `;
-// background-color: #fff;
+// background-color: rgb(109, 109, 109);
 
 const Block: React.FC = () => {
     return (

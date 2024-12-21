@@ -9,27 +9,50 @@ const RotatingCircle = styled.div`
     width: 530px;
     height: 530px;
     border-radius: 50%;
-    border: 1px dashed #ccc;
     display: flex;
     align-items: center;
     justify-content: center;
 `;
 
-const Dot = styled.div<{ top: string; left: string }>`
+const Dot = styled.div<{ top: string; left: string; accented: boolean }>`
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: absolute;
-
-    top: calc(${({ top }) => top} - 25px);
-    left: calc(${({ left }) => left} - 25px);
-    width: 50px;
-    height: 50px;
+    top: calc(${({ top }) => top} - 5px);
+    left: calc(${({ left }) => left} - 5px);
+    width: ${({ accented }) => (accented ? '55px' : '10px')};
+    height: ${({ accented }) => (accented ? '55px' : '10px')};
+    margin: ${({ accented }) => (accented ? '-22.5px;' : '0')};
     box-sizing: border-box;
-    padding-top: 10px;
     font-size: 24px;
     text-align: center;
-    background-color: rgb(189, 189, 189);
     border-radius: 50%;
     cursor: pointer;
+    background-color: #fff;
+    border: 1px solid rgba(48, 62, 88, 0.5);
+    transition: width 0.5s ease, height 0.5s ease, margin 0.5s ease;
+    &:hover {
+        width: 55px;
+        height: 55px;
+        margin: -22.5px;
+    }
+    &::before {
+        content: '';
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background-color: #000;
+        border-radius: 50%;
+        opacity: ${({ accented }) => (accented ? 0 : 1)};
+    }
 `;
+
+// color: ${({ accented }) => (accented ? 'inherit' : 'transparent')};
+//     background-color: ${({ accented }) => (accented ? '#fff' : 'transparent')};
+//     border: ${({ accented }) =>
+//         accented ? '1px solid rgba(48, 62, 88, 0.5)' : 'none'};
+// transition: color 0.5s ease, background-color 0.5s ease, border 0.5s ease;
 
 const calculateDotPositions = (count: number) => {
     const positions = [];
@@ -57,6 +80,8 @@ const CirclePoints: React.FC<CirclePointsProps> = ({
     setPeriod,
 }) => {
     const [points, setPoints] = useState(calculateDotPositions(total));
+    const [activeIndex, setActiveIndex] = useState<number>(1);
+    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
     const circleRef = useRef<HTMLDivElement>(null);
     const dotRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -100,6 +125,11 @@ const CirclePoints: React.FC<CirclePointsProps> = ({
 
         setPoints(newPoints);
 
+        const newActiveIndex = newPoints.findIndex(
+            (point) => point.steps === 0
+        );
+        setActiveIndex(newActiveIndex);
+
         rotateAll(points[newIndex].steps);
     };
 
@@ -125,10 +155,16 @@ const CirclePoints: React.FC<CirclePointsProps> = ({
                     }}
                     top={point.top}
                     left={point.left}
+                    accented={index === activeIndex || index === hoveredIndex}
+                    onMouseEnter={() => setHoveredIndex(index)}
+                    onMouseLeave={() => setHoveredIndex(null)}
                     onClick={() => handleDotClick(index)}
                 >
-                    {point.number}
-                    {/* :: {point.steps} */}
+                    {index === activeIndex || index === hoveredIndex
+                        ? point.number
+                        : ''}
+                    {/* : '•'} */}
+                    {/* {point.number} */}
                 </Dot>
             ))}
         </RotatingCircle>

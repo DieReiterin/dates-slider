@@ -46,7 +46,11 @@ const Circle = styled.div`
 `;
 
 const BackgroundLayer: React.FC = () => {
-    return <Background>{/* <Circle /> */}</Background>;
+    return (
+        <Background>
+            <Circle />
+        </Background>
+    );
 };
 
 export default BackgroundLayer;
