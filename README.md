@@ -4,6 +4,10 @@
 
 ![dates-slider](public/dates-slider.png)
 
+-   [Деплой проекта на Vercel](https://dates-slider.vercel.app/)
+
+---
+
 ### Как запускать проект
 
 1. `npm install`
