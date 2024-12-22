@@ -19,16 +19,18 @@ const StyledDatesDisplay = styled.div`
     }
     @media (max-width: 1500px) {
         width: 280px;
-        justify-content: space-between;
-        margin: 0 0 20px;
+        margin: 0 auto 10px;
         padding: 0 0 60px;
-        border: 1px solid red;
         border-bottom: 1px solid #c7cdd9;
 
         h2 {
             margin: 0;
             font-size: 56px;
             line-height: 72px;
+        }
+        h2.red {
+            margin: 0 0 0 10px;
+            color: rgba(239, 93, 168, 0.8);
         }
     }
 `;
@@ -43,9 +45,9 @@ const DatesDisplay: React.FC<IDatesDisplayProps> = ({ startYear, endYear }) => {
     const [displayedEndYear, setDisplayedEndYear] = useState(endYear);
 
     useEffect(() => {
-        const duration = 900; // Общая длительность анимации в миллисекундах
-        const intervalTime = 50; // Интервал между шагами (меньше = более плавно)
-        const steps = Math.floor(duration / intervalTime); // Количество шагов
+        const duration = 900;
+        const intervalTime = 50;
+        const steps = Math.floor(duration / intervalTime);
 
         const startYearStep = (startYear - displayedStartYear) / steps;
         const endYearStep = (endYear - displayedEndYear) / steps;

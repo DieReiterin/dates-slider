@@ -9,8 +9,10 @@ const BlockContainer = styled.div`
     height: 1080px;
     margin: 0 auto 20px;
     background-color: #fff;
+
     @media (max-width: 1500px) {
         width: 320px;
+        height: 568px;
     }
 `;
 

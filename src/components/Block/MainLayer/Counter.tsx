@@ -20,11 +20,11 @@ const CounterContainer = styled.div`
     @media (max-width: 1500px) {
         order: 2;
         transform: translateY(-100%);
+        z-index: 10;
         width: 60px;
         height: 50px;
         margin: 0;
         padding: 0;
-        border: 1px solid red;
     }
 `;
 

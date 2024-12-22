@@ -27,10 +27,8 @@ const SliderContainer = styled.div<{ isFading: boolean }>`
     }
 
     @media (max-width: 1500px) {
-        border: 1px solid red;
-
         .swiper {
-            padding-bottom: 105px;
+            padding: 0 113px 105px 0;
         }
 
         .swiper-slide {
@@ -56,7 +54,6 @@ const NavBtnWrapper = styled.div`
     align-items: center;
     justify-content: center;
     width: 75px;
-    height: 100%;
 
     @media (max-width: 1500px) {
         display: none;
@@ -89,7 +86,7 @@ const SlideContent = styled.div`
     align-items: flex-start;
     box-sizing: border-box;
     width: auto;
-    height: 135px;
+    min-height: 135px;
 
     span {
         margin: 0 0 15px;
@@ -107,8 +104,7 @@ const SlideContent = styled.div`
     }
 
     @media (max-width: 1500px) {
-        height: 115px;
-        border: 1px solid yellow;
+        min-height: 115px;
 
         span {
             font-size: 16px;
@@ -185,6 +181,7 @@ const EventSlider: React.FC<IEventSliderProps> = ({ events }) => {
     useEffect(() => {
         resizeSlides();
         scrollToStart();
+        swiperRef.current?.update();
     }, [currentEvents]);
 
     return (
@@ -211,11 +208,10 @@ const EventSlider: React.FC<IEventSliderProps> = ({ events }) => {
             </NavBtnWrapper>
             <Swiper
                 slidesPerView="auto"
-                modules={[Pagination]}
                 onSwiper={(swiper) => (swiperRef.current = swiper)}
                 onSlideChange={updateBtnsVisibility}
+                modules={[Pagination]}
                 pagination={{ clickable: true }}
-                slidesPerGroup={1}
             >
                 {currentEvents.map((event, index) => (
                     <SwiperSlide key={index} style={{ width: 'auto' }}>

@@ -20,7 +20,6 @@ const Layer = styled.div`
 
     @media (max-width: 1500px) {
         padding: 60px 0 0 20px;
-        border: 1px solid red;
     }
 `;
 
@@ -46,6 +45,7 @@ const MainLayer: React.FC = () => {
                 current={activePeriodIndex + 1}
                 total={timePeriods.length}
                 setPeriod={handleYearChange}
+                topicName={activePeriod.topic}
             />
             <Counter
                 current={activePeriodIndex + 1}

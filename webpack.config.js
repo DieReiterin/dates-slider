@@ -26,7 +26,7 @@ module.exports = {
                 use: ['style-loader', 'css-loader', 'sass-loader'],
             },
             {
-                test: /\.css$/, // Добавляем обработку обычных CSS файлов
+                test: /\.css$/,
                 use: ['style-loader', 'css-loader'],
             },
             {

@@ -18,10 +18,9 @@ const Text = styled.p`
         padding: 0;
         margin: 0 0 55px;
         font-size: 20px;
-        border: 1px solid red;
+        border: none;
     }
 `;
-// border: 1px solid black;
 
 interface ITitleProps {
     children: ReactNode;

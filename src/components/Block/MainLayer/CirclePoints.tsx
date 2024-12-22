@@ -1,10 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { gsap } from 'gsap';
+import TopicName from './TopicName';
+
+const Wrapper = styled.div`
+    position: absolute;
+    top: 215px;
+    left: calc(50% - 265px);
+    width: 530px;
+    height: 530px;
+`;
 
 const RotatingCircle = styled.div`
     position: absolute;
-    top: 215px;
+    top: 0;
     left: calc(50% - 265px);
     width: 530px;
     height: 530px;
@@ -48,7 +57,7 @@ const Dot = styled.div<{ top: string; left: string; accented: boolean }>`
 
 const calculateDotPositions = (count: number) => {
     const positions = [];
-    const offsetAngle = Math.PI / 4;
+    const offsetAngle = Math.PI / 6;
 
     for (let i = 0; i < count; i++) {
         const angle = (2 * Math.PI * i) / count - Math.PI / 2 + offsetAngle;
@@ -64,12 +73,14 @@ interface CirclePointsProps {
     total: number;
     current: number;
     setPeriod: (number: number) => void;
+    topicName: string;
 }
 
 const CirclePoints: React.FC<CirclePointsProps> = ({
     total,
     current,
     setPeriod,
+    topicName,
 }) => {
     const [points, setPoints] = useState(calculateDotPositions(total));
     const [activeIndex, setActiveIndex] = useState<number>(1);
@@ -138,28 +149,31 @@ const CirclePoints: React.FC<CirclePointsProps> = ({
     }, [current]);
 
     return (
-        <RotatingCircle ref={circleRef}>
-            {points.map((point, index) => (
-                <Dot
-                    key={point.number}
-                    ref={(el: HTMLDivElement | null) => {
-                        dotRefs.current[index] = el;
-                    }}
-                    top={point.top}
-                    left={point.left}
-                    accented={index === activeIndex || index === hoveredIndex}
-                    onMouseEnter={() => setHoveredIndex(index)}
-                    onMouseLeave={() => setHoveredIndex(null)}
-                    onClick={() => handleDotClick(index)}
-                >
-                    {index === activeIndex || index === hoveredIndex
-                        ? point.number
-                        : ''}
-                    {/* : '•'} */}
-                    {/* {point.number} */}
-                </Dot>
-            ))}
-        </RotatingCircle>
+        <Wrapper>
+            <TopicName text={topicName} />
+            <RotatingCircle ref={circleRef}>
+                {points.map((point, index) => (
+                    <Dot
+                        key={point.number}
+                        ref={(el: HTMLDivElement | null) => {
+                            dotRefs.current[index] = el;
+                        }}
+                        top={point.top}
+                        left={point.left}
+                        accented={
+                            index === activeIndex || index === hoveredIndex
+                        }
+                        onMouseEnter={() => setHoveredIndex(index)}
+                        onMouseLeave={() => setHoveredIndex(null)}
+                        onClick={() => handleDotClick(index)}
+                    >
+                        {index === activeIndex || index === hoveredIndex
+                            ? point.number
+                            : ''}
+                    </Dot>
+                ))}
+            </RotatingCircle>
+        </Wrapper>
     );
 };
 
