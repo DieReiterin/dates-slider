@@ -7,10 +7,12 @@ const BlockContainer = styled.div`
     position: relative;
     width: 1440px;
     height: 1080px;
-    margin: 0 auto;
+    margin: 0 auto 20px;
     background-color: #fff;
+    @media (max-width: 1500px) {
+        width: 320px;
+    }
 `;
-// background-color: rgb(109, 109, 109);
 
 const Block: React.FC = () => {
     return (

@@ -8,8 +8,11 @@ const Background = styled.div`
     width: 100%;
     height: 100%;
     overflow: hidden;
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
+    border: 1px solid #ccc;
+
+    @media (max-width: 1500px) {
+        display: none;
+    }
 
     &::before,
     &::after {

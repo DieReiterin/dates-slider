@@ -12,6 +12,10 @@ const RotatingCircle = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+
+    @media (max-width: 1500px) {
+        display: none;
+    }
 `;
 
 const Dot = styled.div<{ top: string; left: string; accented: boolean }>`
@@ -19,40 +23,28 @@ const Dot = styled.div<{ top: string; left: string; accented: boolean }>`
     align-items: center;
     justify-content: center;
     position: absolute;
-    top: calc(${({ top }) => top} - 5px);
-    left: calc(${({ left }) => left} - 5px);
+    top: calc(${({ top }) => top});
+    left: calc(${({ left }) => left});
     width: ${({ accented }) => (accented ? '55px' : '10px')};
     height: ${({ accented }) => (accented ? '55px' : '10px')};
     margin: ${({ accented }) => (accented ? '-22.5px;' : '0')};
-    box-sizing: border-box;
+    box-sizing: content-box;
     font-size: 24px;
     text-align: center;
+    border: 1px solid rgba(48, 62, 88, 0.5);
     border-radius: 50%;
     cursor: pointer;
-    background-color: #fff;
-    border: 1px solid rgba(48, 62, 88, 0.5);
-    transition: width 0.5s ease, height 0.5s ease, margin 0.5s ease;
+    background-color: ${({ accented }) =>
+        accented ? '#fff' : 'rgba(48, 62, 88, 1)'};
+    transition: width 0.5s ease, height 0.5s ease, margin 0.5s ease,
+        background-color 0.5s ease;
     &:hover {
         width: 55px;
         height: 55px;
         margin: -22.5px;
-    }
-    &::before {
-        content: '';
-        position: absolute;
-        width: 10px;
-        height: 10px;
-        background-color: #000;
-        border-radius: 50%;
-        opacity: ${({ accented }) => (accented ? 0 : 1)};
+        background-color: #fff;
     }
 `;
-
-// color: ${({ accented }) => (accented ? 'inherit' : 'transparent')};
-//     background-color: ${({ accented }) => (accented ? '#fff' : 'transparent')};
-//     border: ${({ accented }) =>
-//         accented ? '1px solid rgba(48, 62, 88, 0.5)' : 'none'};
-// transition: color 0.5s ease, background-color 0.5s ease, border 0.5s ease;
 
 const calculateDotPositions = (count: number) => {
     const positions = [];
@@ -60,8 +52,8 @@ const calculateDotPositions = (count: number) => {
 
     for (let i = 0; i < count; i++) {
         const angle = (2 * Math.PI * i) / count - Math.PI / 2 + offsetAngle;
-        const left = `calc(50% + ${Math.cos(angle) * 265}px)`;
-        const top = `calc(50% + ${Math.sin(angle) * 265}px)`;
+        const left = `calc(50% + ${Math.cos(angle) * 265}px - 5px)`;
+        const top = `calc(50% + ${Math.sin(angle) * 265}px - 5px)`;
         const steps = (count - i) % count;
         positions.push({ number: i + 1, top, left, steps });
     }

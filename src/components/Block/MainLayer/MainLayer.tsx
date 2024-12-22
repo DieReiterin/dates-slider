@@ -16,8 +16,12 @@ const Layer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    height: 100%;
     padding: 170px 0 0;
+
+    @media (max-width: 1500px) {
+        padding: 60px 0 0 20px;
+        border: 1px solid red;
+    }
 `;
 
 const MainLayer: React.FC = () => {
@@ -28,17 +32,16 @@ const MainLayer: React.FC = () => {
         if (newValue < 1 || newValue > timePeriods.length) {
             return;
         }
-
         const newIndex = newValue - 1;
         setActivePeriodIndex(newIndex);
     };
     return (
         <Layer>
             <Title>Исторические даты</Title>
-            <DatesDisplay>
-                <h2>{activePeriod.startYear}</h2>
-                <h2 className="red">{activePeriod.endYear}</h2>
-            </DatesDisplay>
+            <DatesDisplay
+                startYear={activePeriod.startYear}
+                endYear={activePeriod.endYear}
+            />
             <CirclePoints
                 current={activePeriodIndex + 1}
                 total={timePeriods.length}
